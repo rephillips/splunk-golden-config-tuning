@@ -1,0 +1,117 @@
+
+###BEGIN SEARCH HEADS###
+
+###distsearch.conf###
+[distributedSearch]
+statusTimeout = 120
+sendTimeout = 120
+receiveTimeout = 1200
+connectionTimeout = 120
+authTokenConnectionTimeout = 120
+authTokenSendTimeout = 120
+authTokenReceiveTimeout = 120
+
+[replicationSettings]
+connectionTimeout = 120
+sendRcvTimeout = 120
+
+
+###limits.conf###
+[search]
+remote_timeline_connection_timeout = 30
+remote_timeline_send_timeout = 30
+
+[scheduler]
+async_saved_search_fetch = true
+
+###server.conf###
+[shclustering]
+cxn_timeout_raft = 30
+send_timeout_raft = 30
+rcv_timeout_raft = 30
+captain_is_adhoc_searchhead = true
+cxn_timeout = 120
+election_timeout_ms = 120
+executor_workers = 3*#of shc nodes
+heartbeat_timeout = 120
+replication_factor =2
+send_timeout = 120
+rcv_timeout =120
+
+
+[httpServer]
+busyKeepAliveIdleTimeout = 120
+streamInWriteTimeout = 30
+
+[sslConfig]
+useClientSSLCompression = false
+
+###END SEARCH HEADS###
+
+
+###BEGIN INDEXERS###
+
+###distsearch.conf###
+[replicationSettings]
+sendRcvTimeout = 120
+
+
+###server.conf###
+[sslConfig]
+sslServerHandshakeTimeout = 120
+useClientSSLCompression = false
+
+[httpServer]
+busyKeepAliveIdleTimeout = 120
+streamInWriteTimeout = 30
+
+[clustering]
+heartbeat_period = 10
+cxn_timeout = 300
+send_timeout = 300
+rcv_timeout = 300
+
+###END INDEXERS###
+
+
+###BEGIN CLUSTER MANAGER###
+
+###server.conf###
+[clustering]
+heartbeat_timeout = 300
+
+###END CLUSTER MANAGER###
+
+
+
+###BEGIN SHC DEPLOYER###
+
+###server.conf###
+[shclustering]
+deployerPushThreads = auto
+
+###END SHC DEPLOYER###
+
+
+###BEGIN HTTP EVENT COLLECTOR RECEVIER INSTANCE###
+
+###inputs.conf###
+[http]
+dedicatedIoThreads = # cpu cores on host machine
+busyKeepAliveIdleTimeout = load balancer connection idle timeout + 5s
+
+[http://name]
+queueSize = 10MB
+
+###server.conf###
+[general]
+parallelIngestionPipelines = 2
+
+
+###limits.conf###
+[input_channels]
+max_inactive = 100000
+lowater_inactive = 90000
+
+
+###END HTTP EVENT COLLECTOR RECEVIER INSTANCE###
